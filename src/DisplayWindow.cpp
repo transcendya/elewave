@@ -47,12 +47,31 @@ DisplayWindow::DisplayWindow(const char* title, int width, int height){
     this->height = height;
 }
 
+bool DisplayWindow::InitSDL(){
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        std::cerr << "Could not initialize SDL2: " << SDL_GetError() << std::endl;
+        return false;
+    }
+    return true;
+}
+
 int DisplayWindow::GetWidth(){
     return width;
 }
 
 int DisplayWindow::GetHeight(){
     return height;
+}
+
+bool DisplayWindow::CheckClosed(){
+    SDL_Event e;
+
+    while (SDL_PollEvent(&e) != 0) {
+        if (e.type == SDL_QUIT) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void DisplayWindow::Show(unsigned char * frame){

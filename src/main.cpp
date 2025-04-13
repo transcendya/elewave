@@ -1,4 +1,3 @@
-#include <SDL2/SDL.h>
 #include <iostream>
 
 #include "DisplayWindow.h"
@@ -11,29 +10,19 @@ int main(int argc, char* argv[]){
     (void)argc;
     (void)argv;
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "Could not initialize SDL2: " << SDL_GetError() << std::endl;
+    if(!DisplayWindow::InitSDL()){
         return -1;
     }
 
-    TDWindow* mainWindow = new TDWindow(
+    DisplayWindow* mainWindow = new DisplayWindow(
         "3d render",
         WINDOW_WIDTH, WINDOW_HEIGHT
     );
 
-    // Main loop flag
-    bool quit = false;
-
-    // Event handler
-    SDL_Event e;
-
     // Main loop
-    while (!quit) {
-        // Handle events in the queue
-        while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) {
-                quit = true;
-            }
+    while (true) {
+        if(mainWindow->CheckClosed()){
+            break;
         }
 
         // Loop iteration

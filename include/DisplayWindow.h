@@ -8,12 +8,16 @@ public:
     DisplayWindow();
     DisplayWindow(const char* title, int width, int height);
 
+    static bool InitSDL();
+
     int GetWidth();
     int GetHeight();
 
+    bool CheckClosed();
+
     void Show(unsigned char * frame);
 
-    ~TDWindow();
+    ~DisplayWindow();
 private:
     int width;
     int height;
