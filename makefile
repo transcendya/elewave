@@ -3,7 +3,7 @@ CXX = g++
 INCLUDES = -I./include
 #INCLUDES += 
 
-CXXFLAGS = $(INCLUDES) -Wall -Wextra -Werror
+CXXFLAGS = $(INCLUDES) -Wall -Wextra -Werror -g -lSDL2
 LDFLAGS = 
 
 TARGET = elewave
