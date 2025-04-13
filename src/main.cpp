@@ -3,8 +3,8 @@
 #include "DisplayWindow.h"
 
 // Window dimensions
-const int WINDOW_WIDTH = 1366;
-const int WINDOW_HEIGHT = 768;
+const unsigned int WINDOW_WIDTH = 1366;
+const unsigned int WINDOW_HEIGHT = 768;
 
 int main(int argc, char* argv[]){
     (void)argc;

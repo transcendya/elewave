@@ -7,7 +7,7 @@ DisplayWindow::DisplayWindow(){
     height = 0;
 }
 
-DisplayWindow::DisplayWindow(const char* title, int width, int height){
+DisplayWindow::DisplayWindow(const char* title, unsigned int width, unsigned int height){
     window = SDL_CreateWindow(
         title,
         SDL_WINDOWPOS_UNDEFINED,
@@ -55,11 +55,11 @@ bool DisplayWindow::InitSDL(){
     return true;
 }
 
-int DisplayWindow::GetWidth(){
+unsigned int DisplayWindow::GetWidth(){
     return width;
 }
 
-int DisplayWindow::GetHeight(){
+unsigned int DisplayWindow::GetHeight(){
     return height;
 }
 

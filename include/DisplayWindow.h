@@ -6,12 +6,12 @@
 class DisplayWindow {
 public:
     DisplayWindow();
-    DisplayWindow(const char* title, int width, int height);
+    DisplayWindow(const char* title, unsigned int width, unsigned int height);
 
     static bool InitSDL();
 
-    int GetWidth();
-    int GetHeight();
+    unsigned int GetWidth();
+    unsigned int GetHeight();
 
     bool CheckClosed();
 
@@ -19,8 +19,8 @@ public:
 
     ~DisplayWindow();
 private:
-    int width;
-    int height;
+    unsigned int width;
+    unsigned int height;
 
     SDL_Window* window;
     SDL_Renderer* renderer;
