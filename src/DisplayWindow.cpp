@@ -7,7 +7,7 @@ DisplayWindow::DisplayWindow(){
     height = 0;
 }
 
-DisplayWindow::DisplayWindow(const char* title, unsigned int width, unsigned int height){
+DisplayWindow::DisplayWindow(const char* title, WDim width, WDim height){
     window = SDL_CreateWindow(
         title,
         SDL_WINDOWPOS_UNDEFINED,
@@ -55,11 +55,11 @@ bool DisplayWindow::InitSDL(){
     return true;
 }
 
-unsigned int DisplayWindow::GetWidth(){
+WDim DisplayWindow::GetWidth(){
     return width;
 }
 
-unsigned int DisplayWindow::GetHeight(){
+WDim DisplayWindow::GetHeight(){
     return height;
 }
 
@@ -74,7 +74,7 @@ bool DisplayWindow::CheckClosed(){
     return false;
 }
 
-void DisplayWindow::Show(unsigned char * frame){
+void DisplayWindow::Show(Color * frame){
     SDL_UpdateTexture(texture, nullptr, frame, width * 3);
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, texture, nullptr, nullptr);

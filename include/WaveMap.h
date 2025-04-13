@@ -1,76 +1,81 @@
 #ifndef WAVE_MAP_H
 #define WAVE_MAP_H
 
+#include "types.h"
+
 class WaveMap {
 public:
     WaveMap();
-    WaveMap(unsigned int width, unsigned int height);
+    WaveMap(MapDim width, MapDim height);
 
     void GetPositiveColor(
-        unsigned char& positiveRed,
-        unsigned char& positiveGreen,
-        unsigned char& positiveBlue
+        Color& positiveRed,
+        Color& positiveGreen,
+        Color& positiveBlue
     );
     void GetNeutralColor(
-        unsigned char& neutralRed,
-        unsigned char& neutralGreen,
-        unsigned char& neutralBlue
+        Color& neutralRed,
+        Color& neutralGreen,
+        Color& neutralBlue
     );
     void GetNegativeColor(
-        unsigned char& negativeRed,
-        unsigned char& negativeGreen,
-        unsigned char& negativeBlue
+        Color& negativeRed,
+        Color& negativeGreen,
+        Color& negativeBlue
     );
-    double GetMaxAmplitude();
+    Displ GetMaxDispl();
 
     void SetPositiveColor(
-        unsigned char positiveRed,
-        unsigned char positiveGreen,
-        unsigned char positiveBlue
+        Color positiveRed,
+        Color positiveGreen,
+        Color positiveBlue
     );
     void SetNeutralColor(
-        unsigned char neutralRed,
-        unsigned char neutralGreen,
-        unsigned char neutralBlue
+        Color neutralRed,
+        Color neutralGreen,
+        Color neutralBlue
     );
     void SetNegativeColor(
-        unsigned char negativeRed,
-        unsigned char negativeGreen,
-        unsigned char negativeBlue
+        Color negativeRed,
+        Color negativeGreen,
+        Color negativeBlue
     );
-    void SetMaxAmplitude(double maxAmplitude);
+    void SetMaxDispl(Displ maxDispl);
 
     void Update();
-    unsigned char * ToColorMap();
+    Color * ToColorMap();
 
     ~WaveMap();
 private:
-    unsigned int width;
-    unsigned int height;
+    void InitColors();
+    void InitWaveMaps();
 
-    double maxAmplitude;
+    MapDim width;
+    MapDim height;
+
+    Displ maxDispl;
 
     //Positive color (wave value at one)
-    unsigned char positiveRed;
-    unsigned char positiveGreen;
-    unsigned char positiveBlue;
+    Color positiveRed;
+    Color positiveGreen;
+    Color positiveBlue;
 
     //Neutral color (wave value at zero)
-    unsigned char neutralRed;
-    unsigned char neutralGreen;
-    unsigned char neutralBlue;
+    Color neutralRed;
+    Color neutralGreen;
+    Color neutralBlue;
 
     //Negative color (wave value at minus one)
-    unsigned char negativeRed;
-    unsigned char negativeGreen;
-    unsigned char negativeBlue;
+    Color negativeRed;
+    Color negativeGreen;
+    Color negativeBlue;
 
     //Matrix of wave at t=0 and t=-1
-    double * waveMap;
-    double * waveMapBefore;
+    Displ * waveMap;
+    Displ * waveMapBefore;
 
     //Wave speed
-    double waveSpeed;
+    Speed waveSpeed;
 };
 
 #endif

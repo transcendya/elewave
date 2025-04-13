@@ -1,26 +1,28 @@
 #ifndef DISPLAY_WINDOW_H
 #define DISPLAY_WINDOW_H
 
+#include "types.h"
+
 #include <SDL2/SDL.h>
 
 class DisplayWindow {
 public:
     DisplayWindow();
-    DisplayWindow(const char* title, unsigned int width, unsigned int height);
+    DisplayWindow(const char* title, WDim width, WDim height);
 
     static bool InitSDL();
 
-    unsigned int GetWidth();
-    unsigned int GetHeight();
+    WDim GetWidth();
+    WDim GetHeight();
 
     bool CheckClosed();
 
-    void Show(unsigned char * frame);
+    void Show(Color * frame);
 
     ~DisplayWindow();
 private:
-    unsigned int width;
-    unsigned int height;
+    WDim width;
+    WDim height;
 
     SDL_Window* window;
     SDL_Renderer* renderer;
