@@ -77,9 +77,41 @@ void WaveMap::SetNegativeColor(
 void WaveMap::SetMaxDispl(Displ maxDispl){
     this->maxDispl = maxDispl;
 }
+void WaveMap::SetWaveSpeed(Speed waveSpeed){
+    this->waveSpeed = waveSpeed;
+}
+void WaveMap::SetDeltaSpace(Distance deltaSpace){
+    this->deltaSpace = deltaSpace;
+}
+void WaveMap::SetDeltaTime(DeltaT deltaTime){
+    this->deltaTime = deltaTime;
+}
 
 void WaveMap::Update(){
-    //TO DO
+    unsigned int nPoints = width * height;
+
+    spaceFactor = (waveSpeed * waveSpeed * deltaTime)/deltaSpace;
+
+    
+    for(unsigned int i = 1; i < height - 1; i++){
+        for(unsigned int j = 1; j < width - 1; j++){
+            unsigned int currentPos = i * width + j;
+
+            spaceContrib = waveMap[currentPos - 1] + waveMap[currentPos + 1]
+                + waveMap[currentPos - width] + waveMap[currentPos + width] 
+                - (4 * waveMap[currentPos]);
+
+            spaceContrib *= spaceFactor;
+
+            timeContrib = 2 * waveMap[currentPos] - waveMapBefore[currentPos];
+
+            waveMapBefore[currentPos] = timeContrib + spaceContrib;
+        }
+    }
+
+    Displ * temp = waveMapBefore;
+    waveMapBefore = waveMap;
+    waveMap = waveMapBefore;
 }
 
 Color * WaveMap::ToColorMap(){

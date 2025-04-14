@@ -20,5 +20,7 @@ typedef unsigned char Color;
 typedef unsigned int MapDim;
 typedef double Displ;
 typedef double Speed;
+typedef double Distance;
+typedef double DeltaT;
 
 #endif

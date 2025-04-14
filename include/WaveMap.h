@@ -41,6 +41,10 @@ public:
         Color negativeBlue
     );
     void SetMaxDispl(Displ maxDispl);
+    
+    void SetWaveSpeed(Speed waveSpeed);
+    void SetDeltaSpace(Distance deltaSpace);
+    void SetDeltaTime(DeltaT deltaTime);
 
     void Update();
     Color * ToColorMap();
@@ -74,7 +78,9 @@ private:
     Displ * waveMap;
     Displ * waveMapBefore;
 
-    //Wave speed
+    //Wave specifications
+    Distance deltaSpace;
+    DeltaT deltaTime;
     Speed waveSpeed;
 };
 
