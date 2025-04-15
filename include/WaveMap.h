@@ -24,6 +24,16 @@ public:
         Color& negativeBlue
     );
     Displ GetMaxDispl();
+    Color * GetColorMap();
+    Color * GetCroppedColorMap();
+    void GetMapDimensions(
+        MapDim& width,
+        MapDim& height
+    );
+    void GetCroppedMapDimensions(
+        MapDim& width,
+        MapDim& height
+    );
 
     void SetPositiveColor(
         Color positiveRed,
@@ -46,13 +56,16 @@ public:
     void SetDeltaSpace(Distance deltaSpace);
     void SetDeltaTime(DeltaT deltaTime);
 
-    void Update();
-    Color * ToColorMap();
+    void UpdateWaveMaps();
+    void UpdateColorMap();
+
+    void PokeMap(Coor x, Coor y, Displ displ);
 
     ~WaveMap();
 private:
     void InitColors();
     void InitWaveMaps();
+    void InitColorMap();
 
     MapDim width;
     MapDim height;
@@ -77,6 +90,8 @@ private:
     //Matrix of wave at t=0 and t=-1
     Displ * waveMap;
     Displ * waveMapBefore;
+
+    Color * colorMap;
 
     //Wave specifications
     Distance deltaSpace;
