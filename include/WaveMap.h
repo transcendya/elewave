@@ -24,15 +24,16 @@ public:
         Color& negativeBlue
     );
     Displ GetMaxDispl();
+    Displ * GetWaveMap();
     Color * GetColorMap();
     Color * GetCroppedColorMap();
     void GetMapDimensions(
         MapDim& width,
         MapDim& height
     );
-    void GetCroppedMapDimensions(
-        MapDim& width,
-        MapDim& height
+    void GetColorMapDimensions(
+        WDim& cmWidth,
+        WDim& cmHeight
     );
 
     void SetPositiveColor(
@@ -69,6 +70,9 @@ private:
 
     MapDim width;
     MapDim height;
+
+    WDim cmWidth;
+    WDim cmHeight;
 
     Displ maxDispl;
 

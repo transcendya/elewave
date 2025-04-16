@@ -1,11 +1,16 @@
 #include "WaveMap.h"
 #include "functions.h"
 
+#include <iostream>
+
 WaveMap::WaveMap(){
-    width = 256;
-    height = 256;
+    width = 256; cmWidth = 254;
+    height = 256; cmHeight = 254;
 
     waveSpeed = 1.0f;
+    deltaSpace = 1.0f;
+    deltaTime = 1.0f;
+
     maxDispl = 1.0f;
     
     InitColors();
@@ -14,10 +19,13 @@ WaveMap::WaveMap(){
 }
 
 WaveMap::WaveMap(MapDim width, MapDim height){
-    this->width = width;
-    this->height = height;
+    this->width = width; this->cmWidth = width - 2;
+    this->height = height; this->cmHeight = height - 2;
 
     waveSpeed = 1.0f;
+    deltaSpace = 1.0f;
+    deltaTime = 1.0f;
+
     maxDispl = 1.0f;
     
     InitColors();
@@ -53,6 +61,10 @@ Displ WaveMap::GetMaxDispl(){
     return maxDispl;
 }
 
+Displ * WaveMap::GetWaveMap(){
+    return waveMap;
+}
+
 void WaveMap::GetMapDimensions(
     MapDim& width,
     MapDim& height
@@ -60,19 +72,16 @@ void WaveMap::GetMapDimensions(
     width = this->width;
     height = this->height;
 }
-void WaveMap::GetCroppedMapDimensions(
-    MapDim& width,
-    MapDim& height
+void WaveMap::GetColorMapDimensions(
+    WDim& cmWidth,
+    WDim& cmHeight
 ){
-    width = this->width - 2;
-    height = this->height - 2;
+    cmWidth = this->cmWidth;
+    cmHeight = this->cmHeight;
 }
 
 Color * WaveMap::GetColorMap(){
     return colorMap;
-}
-Color * WaveMap::GetCroppedColorMap(){
-    return colorMap + 3 * (width + 1);
 }
 
 void WaveMap::SetNeutralColor(
@@ -119,9 +128,9 @@ void WaveMap::UpdateWaveMaps(){
 
             Displ displ = 2 * waveMap[currentPos] - waveMapBefore[currentPos] + spaceContrib;
 
-            //Make sure values stay within -1 and 1
-            if (displ > 1.0f) {displ = 1.0f;}
-            else if (displ < -1.0f) {displ = -1.0f;}
+            //Make sure values stay within -maxDispl and maxDispl
+            if (displ > maxDispl) {displ = maxDispl;}
+            else if (displ < -maxDispl) {displ = -maxDispl;}
 
             waveMapBefore[currentPos] = displ;
         }
@@ -133,27 +142,30 @@ void WaveMap::UpdateWaveMaps(){
 }
 
 void WaveMap::UpdateColorMap(){
-    unsigned int endPoint = (width * (height - 2)) + 1;
-    for(unsigned int i = width + 1; i < endPoint; i++){
-        Displ displ = waveMap[i];
-        unsigned int colorPos = 3 * i;
+    for(unsigned int i = 0; i < cmHeight; i++){
+        unsigned int waveStart = width * (i + 1) + 1;
+        for(unsigned int j = 0; j < cmWidth; j++){
+            Displ displ = waveMap[waveStart + j];
+            unsigned int colorPos = 3 * (cmWidth * i + j);
 
-        if(displ > 0.0f){
-            interpolateColors(
-                neutralRed, neutralGreen, neutralBlue,
-                positiveRed, positiveGreen, positiveBlue,
-                colorMap[colorPos], colorMap[colorPos + 1], colorMap[colorPos + 2],
-                displ
-            );
+            if(displ > 0.0f){
+                interpolateColors(
+                    neutralRed, neutralGreen, neutralBlue,
+                    positiveRed, positiveGreen, positiveBlue,
+                    colorMap[colorPos], colorMap[colorPos + 1], colorMap[colorPos + 2],
+                    displ
+                );
+            }
+            else{
+                interpolateColors(
+                    neutralRed, neutralGreen, neutralBlue,
+                    negativeRed, negativeGreen, negativeBlue,
+                    colorMap[colorPos], colorMap[colorPos + 1], colorMap[colorPos + 2],
+                    -displ
+                );
+            }
         }
-        else{
-            interpolateColors(
-                neutralRed, neutralGreen, neutralBlue,
-                negativeRed, negativeGreen, negativeBlue,
-                colorMap[colorPos], colorMap[colorPos + 1], colorMap[colorPos + 2],
-                -displ
-            );
-        }
+        
     }
 }
 
@@ -193,7 +205,7 @@ void WaveMap::InitWaveMaps(){
 }
 
 void WaveMap::InitColorMap(){
-    unsigned int nPoints = width * height;
+    unsigned int nPoints = 3 * (width - 2) * (height - 2);
 
     colorMap = new Color[nPoints];
 

@@ -6,8 +6,8 @@
 #include "WaveMap.h"
 
 // Map dimensions
-const MapDim MAP_WIDTH = 1366;
-const MapDim MAP_HEIGHT = 768;
+const MapDim MAP_WIDTH = 500;
+const MapDim MAP_HEIGHT = 500;
 
 int main(int argc, char* argv[]){
     (void)argc;
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
     );
 
     WDim window_width, window_height;
-    waveMap->GetCroppedMapDimensions(
+    waveMap->GetColorMapDimensions(
         window_width, window_height
     );
 
@@ -31,21 +31,29 @@ int main(int argc, char* argv[]){
         window_width, window_height
     );
 
-    // Main loop
-    unsigned long i = 0;
-    while (true) {
-        if(i % 100 == 0){
-            std::cout << "Poked!" << std::endl;
-            waveMap->PokeMap(100, 100, 1.0f);
+    waveMap->SetDeltaTime(0.001f);
+
+    for(int i = 200; i < 210; i++){
+        for(int j = 200; j < 210; j++){
+            waveMap->PokeMap(i, j, -1.0f);
         }
-        i++;
+    }
+
+    for(int i = 200; i < 210; i++){
+        for(int j = 290; j < 300; j++){
+            waveMap->PokeMap(i, j, -1.0f);
+        }
+    }
+
+    // Main loop
+    while (true) {
         if(mainWindow->CheckClosed()){
             break;
         }
 
         waveMap->UpdateWaveMaps();
         waveMap->UpdateColorMap();
-        Color * frame = waveMap->GetCroppedColorMap();
+        Color * frame = waveMap->GetColorMap();
         mainWindow->Show(frame);
     }
 
