@@ -25,6 +25,8 @@ public:
     );
     Displ GetMaxDispl();
     Displ * GetWaveMap();
+    Speed * GetSpeedMap();
+    bool * GetWalls();
     Color * GetColorMap();
     Color * GetCroppedColorMap();
     void GetMapDimensions(
@@ -53,7 +55,7 @@ public:
     );
     void SetMaxDispl(Displ maxDispl);
     
-    void SetWaveSpeed(Speed waveSpeed);
+    void SetWaveSpeedValue(Speed waveSpeed);
     void SetDeltaSpace(Distance deltaSpace);
     void SetDeltaTime(DeltaT deltaTime);
 
@@ -66,6 +68,8 @@ public:
 private:
     void InitColors();
     void InitWaveMaps();
+    void InitSpeedMap();
+    void InitWalls();
     void InitColorMap();
 
     MapDim width;
@@ -95,12 +99,17 @@ private:
     Displ * waveMap;
     Displ * waveMapBefore;
 
+    //Matrix of wave speeds
+    Speed * speedMap;
+
+    //Matrix of walls (True means wall)
+    bool * walls;
+
     Color * colorMap;
 
     //Wave specifications
     Distance deltaSpace;
     DeltaT deltaTime;
-    Speed waveSpeed;
 };
 
 #endif

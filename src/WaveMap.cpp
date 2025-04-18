@@ -7,7 +7,6 @@ WaveMap::WaveMap(){
     width = 256; cmWidth = 254;
     height = 256; cmHeight = 254;
 
-    waveSpeed = 1.0f;
     deltaSpace = 1.0f;
     deltaTime = 1.0f;
 
@@ -15,6 +14,8 @@ WaveMap::WaveMap(){
     
     InitColors();
     InitWaveMaps();
+    InitSpeedMap();
+    InitWalls();
     InitColorMap();
 }
 
@@ -22,7 +23,6 @@ WaveMap::WaveMap(MapDim width, MapDim height){
     this->width = width; this->cmWidth = width - 2;
     this->height = height; this->cmHeight = height - 2;
 
-    waveSpeed = 1.0f;
     deltaSpace = 1.0f;
     deltaTime = 1.0f;
 
@@ -30,6 +30,8 @@ WaveMap::WaveMap(MapDim width, MapDim height){
     
     InitColors();
     InitWaveMaps();
+    InitSpeedMap();
+    InitWalls();
     InitColorMap();
 }
 
@@ -57,13 +59,10 @@ void WaveMap::GetNegativeColor(
     negativeBlue = this->negativeBlue;
 }
 
-Displ WaveMap::GetMaxDispl(){
-    return maxDispl;
-}
-
-Displ * WaveMap::GetWaveMap(){
-    return waveMap;
-}
+Displ WaveMap::GetMaxDispl(){ return maxDispl; }
+Displ * WaveMap::GetWaveMap(){ return waveMap; }
+Speed * WaveMap::GetSpeedMap(){ return speedMap; }
+bool * WaveMap::GetWalls(){ return walls; }
 
 void WaveMap::GetMapDimensions(
     MapDim& width,
@@ -80,9 +79,7 @@ void WaveMap::GetColorMapDimensions(
     cmHeight = this->cmHeight;
 }
 
-Color * WaveMap::GetColorMap(){
-    return colorMap;
-}
+Color * WaveMap::GetColorMap(){ return colorMap; }
 
 void WaveMap::SetNeutralColor(
     Color neutralRed, Color neutralGreen, Color neutralBlue
@@ -103,8 +100,12 @@ void WaveMap::SetNegativeColor(
 void WaveMap::SetMaxDispl(Displ maxDispl){
     this->maxDispl = maxDispl;
 }
-void WaveMap::SetWaveSpeed(Speed waveSpeed){
-    this->waveSpeed = waveSpeed;
+void WaveMap::SetWaveSpeedValue(Speed waveSpeed){
+    unsigned int nPoints = width * height;
+
+    for(unsigned int i = 0; i < nPoints; i++){
+        speedMap[i] = waveSpeed;
+    }
 }
 void WaveMap::SetDeltaSpace(Distance deltaSpace){
     this->deltaSpace = deltaSpace;
@@ -114,17 +115,23 @@ void WaveMap::SetDeltaTime(DeltaT deltaTime){
 }
 
 void WaveMap::UpdateWaveMaps(){
-    double spaceFactor = (waveSpeed * waveSpeed * deltaTime)/deltaSpace;
+
+    double timeSpaceFactor = deltaTime/deltaSpace;
     
     for(unsigned int i = 1; i < height - 1; i++){
         for(unsigned int j = 1; j < width - 1; j++){
             unsigned int currentPos = i * width + j;
 
+            //Skip iteration if point is a wall
+            if(walls[currentPos]){ continue; }
+
+            Speed waveSpeed = speedMap[currentPos];
+
             Displ spaceContrib = waveMap[currentPos - 1] + waveMap[currentPos + 1]
                 + waveMap[currentPos - width] + waveMap[currentPos + width] 
                 - (4 * waveMap[currentPos]);
 
-            spaceContrib *= spaceFactor;
+            spaceContrib *= waveSpeed * waveSpeed * timeSpaceFactor;
 
             Displ displ = 2 * waveMap[currentPos] - waveMapBefore[currentPos] + spaceContrib;
 
@@ -204,6 +211,28 @@ void WaveMap::InitWaveMaps(){
     }
 }
 
+void WaveMap::InitSpeedMap(){
+    unsigned int nPoints = width * height;
+
+    speedMap = new Speed[nPoints];
+
+    for(unsigned int i = 0; i < nPoints; i++){
+        speedMap[i] = 1.0f;
+    }
+}
+
+void WaveMap::InitWalls(){
+    unsigned int nPoints = width * height;
+
+    walls = new bool[nPoints];
+
+    for(unsigned int i = 0; i < height; i++){
+        for(unsigned int j = 0; j < width; j++){
+            walls[i * width + j] = i == 0 || i == (height - 1) || j == 0 || j == (width - 1); 
+        }
+    }
+}
+
 void WaveMap::InitColorMap(){
     unsigned int nPoints = 3 * (width - 2) * (height - 2);
 
@@ -217,10 +246,14 @@ void WaveMap::InitColorMap(){
 WaveMap::~WaveMap(){
     delete[] waveMap;
     delete[] waveMapBefore;
+    delete[] speedMap;
+    delete[] walls;
     delete[] colorMap;
     
     waveMap = nullptr;
     waveMapBefore = nullptr;
+    speedMap = nullptr;
+    walls = nullptr;
     colorMap = nullptr;
 }
 
