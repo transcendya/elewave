@@ -9,27 +9,27 @@ public:
     WaveMap(MapDim width, MapDim height);
 
     void GetPositiveColor(
-        Color& positiveRed,
-        Color& positiveGreen,
-        Color& positiveBlue
+        ColorCoor& positiveRed,
+        ColorCoor& positiveGreen,
+        ColorCoor& positiveBlue
     );
     void GetNeutralColor(
-        Color& neutralRed,
-        Color& neutralGreen,
-        Color& neutralBlue
+        ColorCoor& neutralRed,
+        ColorCoor& neutralGreen,
+        ColorCoor& neutralBlue
     );
     void GetNegativeColor(
-        Color& negativeRed,
-        Color& negativeGreen,
-        Color& negativeBlue
+        ColorCoor& negativeRed,
+        ColorCoor& negativeGreen,
+        ColorCoor& negativeBlue
     );
     Displ GetMaxDispl();
     Displ * GetDisplMap();
     Displ * GetDisplMapBefore();
     Speed * GetSpeedMap();
     bool * GetIgnoreMap();
-    Color * GetColorMap();
-    Color * GetCroppedColorMap();
+    ColorCoor * GetColorMap();
+    ColorCoor * GetCroppedColorMap();
     void GetMapDimensions(
         MapDim& width,
         MapDim& height
@@ -40,19 +40,19 @@ public:
     );
 
     void SetPositiveColor(
-        Color positiveRed,
-        Color positiveGreen,
-        Color positiveBlue
+        ColorCoor positiveRed,
+        ColorCoor positiveGreen,
+        ColorCoor positiveBlue
     );
     void SetNeutralColor(
-        Color neutralRed,
-        Color neutralGreen,
-        Color neutralBlue
+        ColorCoor neutralRed,
+        ColorCoor neutralGreen,
+        ColorCoor neutralBlue
     );
     void SetNegativeColor(
-        Color negativeRed,
-        Color negativeGreen,
-        Color negativeBlue
+        ColorCoor negativeRed,
+        ColorCoor negativeGreen,
+        ColorCoor negativeBlue
     );
     void SetMaxDispl(Displ maxDispl);
     
@@ -85,19 +85,19 @@ private:
     Displ maxDispl;
 
     //Positive color (wave value at one)
-    Color positiveRed;
-    Color positiveGreen;
-    Color positiveBlue;
+    ColorCoor positiveRed;
+    ColorCoor positiveGreen;
+    ColorCoor positiveBlue;
 
     //Neutral color (wave value at zero)
-    Color neutralRed;
-    Color neutralGreen;
-    Color neutralBlue;
+    ColorCoor neutralRed;
+    ColorCoor neutralGreen;
+    ColorCoor neutralBlue;
 
     //Negative color (wave value at minus one)
-    Color negativeRed;
-    Color negativeGreen;
-    Color negativeBlue;
+    ColorCoor negativeRed;
+    ColorCoor negativeGreen;
+    ColorCoor negativeBlue;
 
     //Matrix of wave at t=0 and t=-1
     Displ * displMap;
@@ -109,7 +109,7 @@ private:
     //Matrix of ignore points
     bool * ignoreMap;
 
-    Color * colorMap;
+    ColorCoor * colorMap;
 
     //Wave specifications
     Distance deltaSpace;

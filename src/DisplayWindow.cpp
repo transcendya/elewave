@@ -74,7 +74,7 @@ bool DisplayWindow::CheckClosed(){
     return false;
 }
 
-void DisplayWindow::Show(Color * frame){
+void DisplayWindow::Show(ColorCoor * frame){
     SDL_UpdateTexture(texture, nullptr, frame, width * 3);
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, texture, nullptr, nullptr);

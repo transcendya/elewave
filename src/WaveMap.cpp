@@ -34,7 +34,7 @@ WaveMap::WaveMap(MapDim width, MapDim height){
 }
 
 void WaveMap::GetPositiveColor(
-    Color& positiveRed, Color& positiveGreen, Color& positiveBlue
+    ColorCoor& positiveRed, ColorCoor& positiveGreen, ColorCoor& positiveBlue
 ){
     positiveRed = this->positiveRed;
     positiveGreen = this->positiveGreen;
@@ -42,7 +42,7 @@ void WaveMap::GetPositiveColor(
 }
 
 void WaveMap::GetNeutralColor(
-    Color& neutralRed, Color& neutralGreen, Color& neutralBlue
+    ColorCoor& neutralRed, ColorCoor& neutralGreen, ColorCoor& neutralBlue
 ){
     neutralRed = this->neutralRed;
     neutralGreen = this->neutralGreen;
@@ -50,7 +50,7 @@ void WaveMap::GetNeutralColor(
 }
 
 void WaveMap::GetNegativeColor(
-    Color& negativeRed, Color& negativeGreen, Color& negativeBlue
+    ColorCoor& negativeRed, ColorCoor& negativeGreen, ColorCoor& negativeBlue
 ){
     negativeRed = this->negativeRed;
     negativeGreen = this->negativeGreen;
@@ -78,10 +78,10 @@ void WaveMap::GetColorMapDimensions(
     cmHeight = this->cmHeight;
 }
 
-Color * WaveMap::GetColorMap(){ return colorMap; }
+ColorCoor * WaveMap::GetColorMap(){ return colorMap; }
 
 void WaveMap::SetNeutralColor(
-    Color neutralRed, Color neutralGreen, Color neutralBlue
+    ColorCoor neutralRed, ColorCoor neutralGreen, ColorCoor neutralBlue
 ){
     this->neutralRed = neutralRed;
     this->neutralGreen = neutralGreen;
@@ -89,7 +89,7 @@ void WaveMap::SetNeutralColor(
 }
 
 void WaveMap::SetNegativeColor(
-    Color negativeRed, Color negativeGreen, Color negativeBlue
+    ColorCoor negativeRed, ColorCoor negativeGreen, ColorCoor negativeBlue
 ){
     this->negativeRed = negativeRed;
     this->negativeGreen = negativeGreen;
@@ -246,7 +246,7 @@ void WaveMap::InitIgnoreMap(){
 void WaveMap::InitColorMap(){
     unsigned int nPoints = 3 * (width - 2) * (height - 2);
 
-    colorMap = new Color[nPoints];
+    colorMap = new ColorCoor[nPoints];
 
     for(unsigned int i = 0; i < nPoints; i++){
         colorMap[i] = 0;

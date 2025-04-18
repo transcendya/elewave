@@ -10,7 +10,9 @@ public:
     WaveManager();
     WaveManager(WaveMap * waveMap);
 
-    void CreateFixedPoint(Coor x, Coor y, Displ displ);
+    void CreateFixedPoint(
+        Coor x, Coor y, Displ displ
+    );
 
     ~WaveManager();
 private:

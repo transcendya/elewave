@@ -1,12 +1,12 @@
 #include "types.h"
 
 inline void interpolateColors(
-    Color leftRed, Color leftGreen, Color leftBlue,
-    Color rightRed, Color rightGreen, Color rightBlue,
-    Color& interRed, Color& interGreen, Color& interBlue,
+    ColorCoor leftRed, ColorCoor leftGreen, ColorCoor leftBlue,
+    ColorCoor rightRed, ColorCoor rightGreen, ColorCoor rightBlue,
+    ColorCoor& interRed, ColorCoor& interGreen, ColorCoor& interBlue,
     double factor
 ){
-    interRed = static_cast<Color>((rightRed - leftRed) * factor) + leftRed;
-    interGreen = static_cast<Color>((rightGreen - leftGreen) * factor) + leftGreen;
-    interBlue = static_cast<Color>((rightBlue - leftBlue) * factor) + leftBlue;
+    interRed = static_cast<ColorCoor>((rightRed - leftRed) * factor) + leftRed;
+    interGreen = static_cast<ColorCoor>((rightGreen - leftGreen) * factor) + leftGreen;
+    interBlue = static_cast<ColorCoor>((rightBlue - leftBlue) * factor) + leftBlue;
 }

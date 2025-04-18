@@ -17,7 +17,7 @@ public:
 
     bool CheckClosed();
 
-    void Show(Color * frame);
+    void Show(ColorCoor * frame);
 
     ~DisplayWindow();
 private:

@@ -11,7 +11,7 @@ typedef unsigned int WDim;
 // #####            Coloring                  #####
 // ################################################
 
-typedef unsigned char Color;
+typedef unsigned char ColorCoor;
 
 // ################################################
 // #####            Wave                      #####
