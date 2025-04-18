@@ -4,10 +4,11 @@
 
 #include "DisplayWindow.h"
 #include "WaveMap.h"
+#include "WaveManager.h"
 
 // Map dimensions
-const MapDim MAP_WIDTH = 500;
-const MapDim MAP_HEIGHT = 500;
+const MapDim MAP_WIDTH = 1000;
+const MapDim MAP_HEIGHT = 1000;
 
 int main(int argc, char* argv[]){
     (void)argc;
@@ -20,6 +21,10 @@ int main(int argc, char* argv[]){
     WaveMap* waveMap = new WaveMap(
         MAP_WIDTH, MAP_HEIGHT
     );
+    WaveManager* waveManager = new WaveManager(
+        waveMap
+    );
+    waveManager->CreateFixedPoint(500,500,1.0f);
 
     WDim window_width, window_height;
     waveMap->GetColorMapDimensions(
@@ -31,19 +36,7 @@ int main(int argc, char* argv[]){
         window_width, window_height
     );
 
-    waveMap->SetDeltaTime(0.001f);
-
-    for(int i = 200; i < 210; i++){
-        for(int j = 200; j < 210; j++){
-            waveMap->PokeMap(i, j, -1.0f);
-        }
-    }
-
-    for(int i = 200; i < 210; i++){
-        for(int j = 290; j < 300; j++){
-            waveMap->PokeMap(i, j, -1.0f);
-        }
-    }
+    waveMap->SetDeltaTime(0.1f);
 
     // Main loop
     while (true) {
@@ -51,7 +44,7 @@ int main(int argc, char* argv[]){
             break;
         }
 
-        waveMap->UpdateWaveMaps();
+        waveMap->UpdateDisplMaps();
         waveMap->UpdateColorMap();
         Color * frame = waveMap->GetColorMap();
         mainWindow->Show(frame);

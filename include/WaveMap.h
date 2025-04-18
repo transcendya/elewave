@@ -24,9 +24,10 @@ public:
         Color& negativeBlue
     );
     Displ GetMaxDispl();
-    Displ * GetWaveMap();
+    Displ * GetDisplMap();
+    Displ * GetDisplMapBefore();
     Speed * GetSpeedMap();
-    bool * GetWalls();
+    bool * GetIgnoreMap();
     Color * GetColorMap();
     Color * GetCroppedColorMap();
     void GetMapDimensions(
@@ -59,17 +60,20 @@ public:
     void SetDeltaSpace(Distance deltaSpace);
     void SetDeltaTime(DeltaT deltaTime);
 
-    void UpdateWaveMaps();
+    void UpdateDisplMaps();
     void UpdateColorMap();
 
     void PokeMap(Coor x, Coor y, Displ displ);
+    void PokeMapBefore(Coor x, Coor y, Displ displ);
+    void EnableIgnorePoint(Coor x, Coor y);
+    void DisableIgnorePoint(Coor x, Coor y);
 
     ~WaveMap();
 private:
     void InitColors();
-    void InitWaveMaps();
+    void InitDisplMaps();
     void InitSpeedMap();
-    void InitWalls();
+    void InitIgnoreMap();
     void InitColorMap();
 
     MapDim width;
@@ -96,14 +100,14 @@ private:
     Color negativeBlue;
 
     //Matrix of wave at t=0 and t=-1
-    Displ * waveMap;
-    Displ * waveMapBefore;
+    Displ * displMap;
+    Displ * displMapBefore;
 
     //Matrix of wave speeds
     Speed * speedMap;
 
-    //Matrix of walls (True means wall)
-    bool * walls;
+    //Matrix of ignore points
+    bool * ignoreMap;
 
     Color * colorMap;
 

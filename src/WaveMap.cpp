@@ -1,8 +1,6 @@
 #include "WaveMap.h"
 #include "functions.h"
 
-#include <iostream>
-
 WaveMap::WaveMap(){
     width = 256; cmWidth = 254;
     height = 256; cmHeight = 254;
@@ -13,9 +11,9 @@ WaveMap::WaveMap(){
     maxDispl = 1.0f;
     
     InitColors();
-    InitWaveMaps();
+    InitDisplMaps();
     InitSpeedMap();
-    InitWalls();
+    InitIgnoreMap();
     InitColorMap();
 }
 
@@ -29,9 +27,9 @@ WaveMap::WaveMap(MapDim width, MapDim height){
     maxDispl = 1.0f;
     
     InitColors();
-    InitWaveMaps();
+    InitDisplMaps();
     InitSpeedMap();
-    InitWalls();
+    InitIgnoreMap();
     InitColorMap();
 }
 
@@ -60,9 +58,10 @@ void WaveMap::GetNegativeColor(
 }
 
 Displ WaveMap::GetMaxDispl(){ return maxDispl; }
-Displ * WaveMap::GetWaveMap(){ return waveMap; }
+Displ * WaveMap::GetDisplMap(){ return displMap; }
+Displ * WaveMap::GetDisplMapBefore(){ return displMapBefore; }
 Speed * WaveMap::GetSpeedMap(){ return speedMap; }
-bool * WaveMap::GetWalls(){ return walls; }
+bool * WaveMap::GetIgnoreMap(){ return ignoreMap; }
 
 void WaveMap::GetMapDimensions(
     MapDim& width,
@@ -114,7 +113,7 @@ void WaveMap::SetDeltaTime(DeltaT deltaTime){
     this->deltaTime = deltaTime;
 }
 
-void WaveMap::UpdateWaveMaps(){
+void WaveMap::UpdateDisplMaps(){
 
     double timeSpaceFactor = deltaTime/deltaSpace;
     
@@ -122,37 +121,41 @@ void WaveMap::UpdateWaveMaps(){
         for(unsigned int j = 1; j < width - 1; j++){
             unsigned int currentPos = i * width + j;
 
-            //Skip iteration if point is a wall
-            if(walls[currentPos]){ continue; }
+            //Skip iteration if point is a ignore point
+            if(ignoreMap[currentPos]){ continue; }
 
             Speed waveSpeed = speedMap[currentPos];
 
-            Displ spaceContrib = waveMap[currentPos - 1] + waveMap[currentPos + 1]
-                + waveMap[currentPos - width] + waveMap[currentPos + width] 
-                - (4 * waveMap[currentPos]);
+            Displ spaceContrib = displMap[currentPos - 1] + displMap[currentPos + 1]
+                + displMap[currentPos - width] + displMap[currentPos + width] 
+                - (4 * displMap[currentPos]);
 
             spaceContrib *= waveSpeed * waveSpeed * timeSpaceFactor;
 
-            Displ displ = 2 * waveMap[currentPos] - waveMapBefore[currentPos] + spaceContrib;
+            Displ displ = 2 * displMap[currentPos] - displMapBefore[currentPos] + spaceContrib;
 
             //Make sure values stay within -maxDispl and maxDispl
             if (displ > maxDispl) {displ = maxDispl;}
             else if (displ < -maxDispl) {displ = -maxDispl;}
 
-            waveMapBefore[currentPos] = displ;
+            displMapBefore[currentPos] = displ;
         }
     }
 
-    Displ * temp = waveMapBefore;
-    waveMapBefore = waveMap;
-    waveMap = temp;
+    Displ * temp = displMapBefore;
+    displMapBefore = displMap;
+    displMap = temp;
 }
 
 void WaveMap::UpdateColorMap(){
     for(unsigned int i = 0; i < cmHeight; i++){
         unsigned int waveStart = width * (i + 1) + 1;
         for(unsigned int j = 0; j < cmWidth; j++){
-            Displ displ = waveMap[waveStart + j];
+            unsigned int currentPos = waveStart + j;
+
+            if(ignoreMap[currentPos]){ continue; }
+
+            Displ displ = displMap[currentPos];
             unsigned int colorPos = 3 * (cmWidth * i + j);
 
             if(displ > 0.0f){
@@ -177,9 +180,16 @@ void WaveMap::UpdateColorMap(){
 }
 
 void WaveMap::PokeMap(Coor x, Coor y, Displ displ){
-    unsigned int pointIndex = y * width + x;
-
-    waveMap[pointIndex] = displ;
+    displMap[y * width + x] = displ;
+}
+void WaveMap::PokeMapBefore(Coor x, Coor y, Displ displ){
+    displMapBefore[y * width + x] = displ;
+}
+void WaveMap::EnableIgnorePoint(Coor x, Coor y){
+    ignoreMap[y * width + x] = true;
+}
+void WaveMap::DisableIgnorePoint(Coor x, Coor y){
+    ignoreMap[y * width + x] = false;
 }
 
 void WaveMap::InitColors(){
@@ -199,15 +209,15 @@ void WaveMap::InitColors(){
     negativeBlue = 255;
 }
 
-void WaveMap::InitWaveMaps(){
+void WaveMap::InitDisplMaps(){
     unsigned int nPoints = width * height;
 
-    waveMap = new Displ[nPoints];
-    waveMapBefore = new Displ[nPoints];
+    displMap = new Displ[nPoints];
+    displMapBefore = new Displ[nPoints];
 
     for(unsigned int i = 0; i < nPoints; i++){
-        waveMap[i] = 0.0f;
-        waveMapBefore[i] = 0.0f;
+        displMap[i] = 0.0f;
+        displMapBefore[i] = 0.0f;
     }
 }
 
@@ -221,14 +231,14 @@ void WaveMap::InitSpeedMap(){
     }
 }
 
-void WaveMap::InitWalls(){
+void WaveMap::InitIgnoreMap(){
     unsigned int nPoints = width * height;
 
-    walls = new bool[nPoints];
+    ignoreMap = new bool[nPoints];
 
     for(unsigned int i = 0; i < height; i++){
         for(unsigned int j = 0; j < width; j++){
-            walls[i * width + j] = i == 0 || i == (height - 1) || j == 0 || j == (width - 1); 
+            ignoreMap[i * width + j] = i == 0 || i == (height - 1) || j == 0 || j == (width - 1); 
         }
     }
 }
@@ -244,16 +254,16 @@ void WaveMap::InitColorMap(){
 }
 
 WaveMap::~WaveMap(){
-    delete[] waveMap;
-    delete[] waveMapBefore;
+    delete[] displMap;
+    delete[] displMapBefore;
     delete[] speedMap;
-    delete[] walls;
+    delete[] ignoreMap;
     delete[] colorMap;
     
-    waveMap = nullptr;
-    waveMapBefore = nullptr;
+    displMap = nullptr;
+    displMapBefore = nullptr;
     speedMap = nullptr;
-    walls = nullptr;
+    ignoreMap = nullptr;
     colorMap = nullptr;
 }
 
