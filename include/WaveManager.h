@@ -15,7 +15,8 @@ public:
         ColorCoor red, ColorCoor green, ColorCoor blue
     );
     void CreateFixedRect(
-        Coor x, Coor y, Distance w, Distance h, Displ displ 
+        Coor x, Coor y, Distance w, Distance h, Displ displ,
+        ColorCoor red, ColorCoor green, ColorCoor blue
     );
 
     ~WaveManager();

@@ -21,14 +21,19 @@ void WaveManager::CreateFixedPoint(
 }
 
 void WaveManager::CreateFixedRect(
-    Coor x, Coor y, Distance w, Distance h, Displ displ
+    Coor x, Coor y, Distance w, Distance h, Displ displ,
+    ColorCoor red, ColorCoor green, ColorCoor blue
 ){
     Displ * displMap = waveMap->GetDisplMap();
     Displ * displMapBefore = waveMap->GetDisplMapBefore();
     bool * ignoreMap = waveMap->GetIgnoreMap();
+    ColorCoor * colorMap = waveMap->GetColorMap();
 
     MapDim width, height;
     waveMap->GetMapDimensions(width, height);
+
+    MapDim cmWidth, cmHeight;
+    waveMap->GetColorMapDimensions(cmWidth, cmHeight);
 
     for(unsigned int i = y; i < y + h; i++){
         for(unsigned int j = x; j < x + w; j++){
@@ -37,6 +42,16 @@ void WaveManager::CreateFixedRect(
             displMap[currentPos] = displ;
             displMapBefore[currentPos] = displ;
             ignoreMap[currentPos] = true;
+        }
+    }
+
+    for(unsigned int i = y - 1; i < y + h - 1; i++){
+        for(unsigned int j = x - 1; j < x + w - 1; j++){
+            unsigned int currentPos = 3 * (i * cmWidth + j);
+
+            colorMap[currentPos] = red;
+            colorMap[currentPos + 1] = green;
+            colorMap[currentPos + 2] = blue;
         }
     }
 }
