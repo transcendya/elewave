@@ -1,13 +1,20 @@
 #include "WaveManager.h"
 
 #include "WaveMap.h"
+#include "functions.h"
 
 WaveManager::WaveManager(){
     waveMap = nullptr;
+    
+    waveStep = nullptr;
+    waveDeltaTime = nullptr;
 }
 
 WaveManager::WaveManager(WaveMap * waveMap){
     this->waveMap = waveMap;
+    
+    waveStep = waveMap->GetStepPointer();
+    waveDeltaTime = waveMap->GetDeltaTimePointer();
 }
 
 void WaveManager::CreateFixedPoint(
@@ -38,22 +45,56 @@ void WaveManager::CreateFixedRect(
     for(unsigned int i = y; i < y + h; i++){
         for(unsigned int j = x; j < x + w; j++){
             unsigned int currentPos = i * width + j;
+            unsigned int currentColorPos = 3 * ((i - 1) * cmWidth + j - 1);
             
             displMap[currentPos] = displ;
             displMapBefore[currentPos] = displ;
             ignoreMap[currentPos] = true;
+
+            colorMap[currentColorPos] = red;
+            colorMap[currentColorPos + 1] = green;
+            colorMap[currentColorPos + 2] = blue;
         }
     }
+}
 
-    for(unsigned int i = y - 1; i < y + h - 1; i++){
-        for(unsigned int j = x - 1; j < x + w - 1; j++){
-            unsigned int currentPos = 3 * (i * cmWidth + j);
+void WaveManager::CreateFixedCircle(
+    Coor x, Coor y, Distance radius, Displ displ,
+    ColorCoor red, ColorCoor green, ColorCoor blue
+){
+    Displ * displMap = waveMap->GetDisplMap();
+    Displ * displMapBefore = waveMap->GetDisplMapBefore();
+    bool * ignoreMap = waveMap->GetIgnoreMap();
+    ColorCoor * colorMap = waveMap->GetColorMap();
 
-            colorMap[currentPos] = red;
-            colorMap[currentPos + 1] = green;
-            colorMap[currentPos + 2] = blue;
+    MapDim width, height;
+    waveMap->GetMapDimensions(width, height);
+
+    MapDim cmWidth, cmHeight;
+    waveMap->GetColorMapDimensions(cmWidth, cmHeight);
+
+    Distance radiusSquared = radius * radius;
+
+    for(unsigned int i = y - radius; i < y + radius; i++){
+        for(unsigned int j = x - radius; j < x + radius; j++){
+            //If point is outside the circle skip it
+            if(euclideanSquared(j, i, x, y) > radiusSquared){ continue; }
+            
+            unsigned int currentPos = i * width + j;
+            unsigned int currentColorPos = 3 * ((i - 1) * cmWidth + j - 1);
+            
+            displMap[currentPos] = displ;
+            displMapBefore[currentPos] = displ;
+            ignoreMap[currentPos] = true;
+
+            colorMap[currentColorPos] = red;
+            colorMap[currentColorPos + 1] = green;
+            colorMap[currentColorPos + 2] = blue;
         }
     }
+}
+
+void WaveManager::Update(){
 }
 
 WaveManager::~WaveManager(){

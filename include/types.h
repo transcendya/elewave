@@ -18,7 +18,7 @@ typedef unsigned char ColorCoor;
 // ################################################
 
 typedef unsigned int MapDim;
-typedef unsigned int Coor;
+typedef int Coor;
 typedef double Displ;
 typedef double Speed;
 typedef double Distance;

@@ -24,12 +24,16 @@ public:
         ColorCoor& negativeBlue
     );
     Displ GetMaxDispl();
+    unsigned int GetStep();
+    unsigned int * GetStepPointer();
+    DeltaT GetTimeSinceStart();
+    DeltaT GetDeltaTime();
+    DeltaT * GetDeltaTimePointer();
     Displ * GetDisplMap();
     Displ * GetDisplMapBefore();
     Speed * GetSpeedMap();
     bool * GetIgnoreMap();
     ColorCoor * GetColorMap();
-    ColorCoor * GetCroppedColorMap();
     void GetMapDimensions(
         MapDim& width,
         MapDim& height
@@ -60,8 +64,7 @@ public:
     void SetDeltaSpace(Distance deltaSpace);
     void SetDeltaTime(DeltaT deltaTime);
 
-    void UpdateDisplMaps();
-    void UpdateColorMap();
+    void Update();
 
     void PokeMap(Coor x, Coor y, Displ displ);
     void PokeMapBefore(Coor x, Coor y, Displ displ);
@@ -76,6 +79,9 @@ private:
     void InitSpeedMap();
     void InitIgnoreMap();
     void InitColorMap();
+
+    void UpdateDisplMaps();
+    void UpdateColorMap();
 
     MapDim width;
     MapDim height;
@@ -115,6 +121,9 @@ private:
     //Wave specifications
     Distance deltaSpace;
     DeltaT deltaTime;
+
+    //Store current step
+    unsigned int step;
 };
 
 #endif

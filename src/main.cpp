@@ -33,7 +33,7 @@ int main(int argc, char* argv[]){
         200, 200, 200
     );
 
-    waveManager->CreateFixedPoint(500, 600, 1.0f, 255,255,255);
+    waveManager->CreateFixedCircle(500, 700, 20, 1.0f, 255,100,0);
 
     WDim window_width, window_height;
     waveMap->GetColorMapDimensions(
@@ -53,8 +53,7 @@ int main(int argc, char* argv[]){
             break;
         }
 
-        waveMap->UpdateDisplMaps();
-        waveMap->UpdateColorMap();
+        waveMap->Update();
         ColorCoor * frame = waveMap->GetColorMap();
         mainWindow->Show(frame);
     }
