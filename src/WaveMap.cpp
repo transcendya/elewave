@@ -185,6 +185,12 @@ void WaveMap::PokeMap(Coor x, Coor y, Displ displ){
 void WaveMap::PokeMapBefore(Coor x, Coor y, Displ displ){
     displMapBefore[y * width + x] = displ;
 }
+void WaveMap::PokeColorMap(Coor x, Coor  y, ColorCoor red, ColorCoor green, ColorCoor blue){
+    unsigned int startPos = 3 * (y * cmWidth + x);
+    colorMap[startPos] = red;
+    colorMap[startPos + 1] = green;
+    colorMap[startPos + 2] = blue;
+}
 void WaveMap::EnableIgnorePoint(Coor x, Coor y){
     ignoreMap[y * width + x] = true;
 }

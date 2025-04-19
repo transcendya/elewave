@@ -24,7 +24,10 @@ int main(int argc, char* argv[]){
     WaveManager* waveManager = new WaveManager(
         waveMap
     );
-    waveManager->CreateFixedPoint(500,500,-1.0f);
+    waveManager->CreateFixedPoint(
+        500,500,1.0f,
+        0,255,0
+    );
 
     WDim window_width, window_height;
     waveMap->GetColorMapDimensions(

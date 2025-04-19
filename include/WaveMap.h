@@ -65,6 +65,7 @@ public:
 
     void PokeMap(Coor x, Coor y, Displ displ);
     void PokeMapBefore(Coor x, Coor y, Displ displ);
+    void PokeColorMap(Coor x, Coor  y, ColorCoor red, ColorCoor green, ColorCoor blue);
     void EnableIgnorePoint(Coor x, Coor y);
     void DisableIgnorePoint(Coor x, Coor y);
 

@@ -11,7 +11,11 @@ public:
     WaveManager(WaveMap * waveMap);
 
     void CreateFixedPoint(
-        Coor x, Coor y, Displ displ
+        Coor x, Coor y, Displ displ,
+        ColorCoor red, ColorCoor green, ColorCoor blue
+    );
+    void CreateFixedRect(
+        Coor x, Coor y, Distance w, Distance h, Displ displ 
     );
 
     ~WaveManager();
